@@ -3,8 +3,8 @@ title: Question Level Prediction
 emoji: 🎓
 colorFrom: purple
 colorTo: blue
-sdk: streamlit
-app_port: 8501
+sdk: docker
+app_port: 7860
 ---
 
 # 🎓 Question Bloom Level & Difficulty Prediction
@@ -50,15 +50,22 @@ This project performs an end-to-end machine learning pipeline for analyzing the 
 
 ### Features
 
-| Feature | Type | Description |
-|---|---|---|
-| Question Text | string | **Primary Input** — The raw text of the question |
-| Subject | object | Subject category (e.g., Science, Maths) |
-| Topic | object | Specific topic within the subject |
-| Success Rate | float64 | Ratio of correct attempts to total attempts |
-| Avg Score | float64 | Normalized average score achieved by students |
-| Log Attempts | float64 | Log-transformed student attempt count |
-| Question Length | int64 | Word count of the question text |
+The model uses a total of **12 features** (9 base features from the dataset + 3 engineered features):
+
+| Feature | Type | Source | Description |
+|---|---|---|---|
+| **Question Text** | string | Base | The raw text of the question (Vectorized via NLP) |
+| **Subject** | object | Base | Broad subject category (e.g., Science, Maths) |
+| **Topic** | object | Base | Specific topic within the subject |
+| **Avg Score** | float64 | Base | Average score achieved by students (0.0 - 1.0) |
+| **Correct %** | float64 | Base | Percentage of students who got the question right |
+| **Students Attempted** | int64 | Base | Total count of students who answered the question |
+| **Students Correct** | int64 | Base | Total count of students who answered correctly |
+| **Time Taken** | float64 | Base | Average time spent on the question (minutes) |
+| **Unnamed: 0 / ID** | int64 | Base | Unique identifier/Index for the record |
+| **Success Rate** | float64 | **Engineered** | Calculated as (Correct / Attempted) |
+| **Log Attempts** | float64 | **Engineered** | Log-transformed attempt count for better scaling |
+| **Question Length** | int64 | **Engineered** | Total word count of the question text |
 
 ---
 
@@ -136,6 +143,16 @@ python3 logistic_regression_deployment.py --train
 
 # Launch the dashboard
 streamlit run app.py
+```
+
+### Running with Docker
+
+```bash
+# Build the Docker image
+docker build -t question-classifier .
+
+# Run the container
+docker run -p 7860:7860 question-classifier
 ```
 
 ---
