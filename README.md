@@ -5,6 +5,8 @@ colorFrom: purple
 colorTo: blue
 sdk: docker
 app_port: 7860
+app_file: app.py
+pinned: false
 ---
 
 # 🎓 Question Bloom Level & Difficulty Prediction
@@ -62,7 +64,6 @@ The model uses a total of **12 features** (9 base features from the dataset + 3 
 | **Students Attempted** | int64 | Base | Total count of students who answered the question |
 | **Students Correct** | int64 | Base | Total count of students who answered correctly |
 | **Time Taken** | float64 | Base | Average time spent on the question (minutes) |
-| **Unnamed: 0 / ID** | int64 | Base | Unique identifier/Index for the record |
 | **Success Rate** | float64 | **Engineered** | Calculated as (Correct / Attempted) |
 | **Log Attempts** | float64 | **Engineered** | Log-transformed attempt count for better scaling |
 | **Question Length** | int64 | **Engineered** | Total word count of the question text |
@@ -108,6 +109,8 @@ The model uses a total of **12 features** (9 base features from the dataset + 3 
 | **Sentence-Transformers** | NLP & Semantic Embeddings |
 | **scikit-learn** | ML Models, Preprocessing, and Metrics |
 | **Pandas / NumPy** | Data manipulation and Numerical logic |
+| **Docker** | Containerization |
+| **Hugging Face** | Deployment |
 
 ---
 
@@ -160,4 +163,3 @@ docker run -p 7860:7860 question-classifier
 ## 📝 License
 
 This project is part of the GenAI Capstone project.
- 
