@@ -22,16 +22,12 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sentence_transformers import SentenceTransformer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from scipy.sparse import hstack
 
-# Handle optional dependency for text embeddings
-try:
-    from sentence_transformers import SentenceTransformer
-except ImportError:
-    print("Error: 'sentence-transformers' is missing. Text features will not work.")
-    print("Install it using: pip install sentence-transformers")
+
 
 class BloomModelDeployer:
     """
@@ -65,10 +61,11 @@ class BloomModelDeployer:
         """
         Loads the embedding model only when needed to save startup time and memory.
         We use 'all-MiniLM-L6-v2' because it strikes a great balance between speed and quality.
+        We explicitly use 'cpu' to avoid "meta tensor" device errors on some systems.
         """
         if self.sentence_model is None:
             print("Loading text embedding model (this might take a few seconds)...")
-            self.sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
+            self.sentence_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
         return self.sentence_model
 
     def preprocess(self, df):
