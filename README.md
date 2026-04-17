@@ -123,10 +123,28 @@ capstone_genai/
 ├── final.csv                  # Main dataset
 ├── milestone1.ipynb           # Research and Development Notebook
 ├── logistic_regression_deployment.py # Core ML class
-├── app.py                     # Beautified Streamlit Frontend
+├── app.py                     # Beautified Streamlit Frontend (Tabs: ML & Agent)
+├── graph.py                   # LangGraph Agent logic
+├── nodes.py                   # LangGraph nodes
+├── rag.py                     # FAISS Vector Store logic
+├── state.py                   # Agent State definitions
+├── pedagogy_guidelines.md     # RAG document source
 ├── requirements.txt           # Deployment dependencies
 └── README.md                  # Project documentation
 ```
+
+---
+
+## 🤖 Agentic Workflow (Milestone 2 Architecture)
+
+The second milestone includes an explicit **LangGraph** agent paired with **Retrieval-Augmented Generation (RAG)** to provide instructional recommendations.
+
+### Architecture Workflow
+1. **QuestionAnalyzer**: Evaluates the question's parameters and ML predictions.
+2. **GapDetector**: Calculates learning gaps based on success rates and completion time.
+3. **RAGRetriever**: Uses a local **FAISS** vector store embedded with `all-MiniLM-L6-v2` to retrieve appropriate pedagogical guidelines.
+4. **RecommendationGenerator**: Prompts the **Groq LLM** with the context and gaps to propose 3 actionable, structured redesign efforts.
+5. **ReportBuilder**: Standardizes the output into a final report visible on the Streamlit dashboard.
 
 ---
 
@@ -134,13 +152,16 @@ capstone_genai/
 
 ### Prerequisites
 - Python 3.9+
-- Pip (Python Package Manager)
+- Groq API Key
 
 ### Installation
 
 ```bash
+# Create an environments file and add your Groq API key
+echo "GROQ_API_KEY=your_key_here" > .env
+
 # Install dependencies
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 
 # Train the models (if pkl files are missing)
 python3 logistic_regression_deployment.py --train
@@ -155,8 +176,8 @@ streamlit run app.py
 # Build the Docker image
 docker build -t question-classifier .
 
-# Run the container
-docker run -p 7860:7860 question-classifier
+# Run the container (Make sure .env contains API keys)
+docker run -p 7860:7860 --env-file .env question-classifier
 ```
 
 ---

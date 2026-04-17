@@ -5,3 +5,11 @@ scikit-learn
 scipy
 sentence-transformers
 joblib
+langchain
+langchain-core
+langchain-community
+langchain-huggingface
+langchain-groq
+langgraph
+faiss-cpu
+python-dotenv
