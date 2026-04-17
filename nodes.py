@@ -78,12 +78,16 @@ def recommendation_node(state: AgentState) -> AgentState:
     return state
 
 def report_builder_node(state: AgentState) -> AgentState:
+    rag_raw = state.get("rag_context", "")
+    # Scrub basic markdown to keep it looking like natural text
+    rag_clean = rag_raw.replace("*", "").replace("#", "").replace("- ", "").replace("\n\n", " ")
+    
     state["final_report"] = {
         "Assessment Quality Summary": state.get("analysis_stats", ""),
         "Difficulty Distribution Analysis": state.get("ml_results", {}).get("difficulty", "Unknown"),
         "Identified Learning Gaps": state.get("learning_gaps", ""),
         "Recommended Improvements": state.get("recommendations", ""),
-        "Pedagogical References": "Guidelines retrieved systematically using FAISS Vector Search.",
+        "Pedagogical References": rag_clean if rag_clean else "No specific references found.",
         "Ethical/Educational Disclaimer": "This analysis is AI-generated for advisory purposes. Final decisions should rely on an educator's professional judgment."
     }
     return state
