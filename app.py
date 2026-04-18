@@ -111,50 +111,53 @@ if st.button("Analyze & Generate Assessment Report", type="primary", use_contain
             "ml_results": results
         }
         
-        status_container = st.container(border=True)
-        with status_container:
-            st.markdown("**Agent Execution Progress**")
-            step1 = st.empty()
-            step2 = st.empty()
-            step3 = st.empty()
-            step4 = st.empty()
-            step5 = st.empty()
-            
         report = None
         try:
-            for event in agent_graph.stream(initial_state):
-                if "QuestionAnalyzer" in event:
-                    step1.text("Step 1: Analyzed Question & ML Results")
-                elif "GapDetector" in event:
-                    step2.text("Step 2: Detected Student Learning Gaps")
-                elif "RAGRetriever" in event:
-                    step3.text("Step 3: Retrieved Pedagogical References")
-                elif "RecommendationGenerator" in event:
-                    step4.text("Step 4: Generated AI Recommendations")
-                elif "ReportBuilder" in event:
-                    step5.text("Step 5: Built Final Report")
-                    report = event["ReportBuilder"]["final_report"]
+            with st.spinner("Generating AI pedagogical report..."):
+                final_state = agent_graph.invoke(initial_state)
+                report = final_state.get("final_report")
         except Exception as e:
             st.error(f"Agent execution failed: {e}")
             
         if report:
-            # Display plain text using natural prose formatting
-            st.markdown("### Final Structured Report")
+            st.markdown("---")
+            st.header("✨ Comprehensive Assessment Report")
+            st.markdown("Below is the specialized feedback generated collaboratively by the Machine Learning model and the Agentic Pedagogical AI.")
             
-            with st.container(border=True):
-                st.markdown("#### Assessment Quality Summary")
-                st.write(report['Assessment Quality Summary'])
+            st.write("")
+            
+            # Use native Streamlit metrics
+            st.subheader("📊 Performance & Classification")
+            m1, m2, m3, m4 = st.columns(4)
+            m1.metric("Bloom's Level", results.get("bloom_level", "N/A"))
+            m2.metric("Difficulty", results.get("difficulty", "N/A"))
+            m3.metric("Average Score", f"{sample_data.get('avg_score', 0):.2f}")
+            m4.metric("Correct Rate", f"{sample_data.get('correct_percentage', 0)}%")
+            
+            st.write("")
+            
+            col_left, col_right = st.columns(2)
+            
+            with col_left:
+                st.subheader("🧠 Assessment Summary")
+                st.info(report['Assessment Quality Summary'], icon="ℹ️")
                 
-            with st.container(border=True):
-                st.markdown("#### Identified Learning Gaps")
-                st.write(report['Identified Learning Gaps'])
+            with col_right:
+                st.subheader("⚠️ Learning Gaps")
+                # Warning color is best for gaps
+                st.warning(report['Identified Learning Gaps'], icon="🚨")
                 
-            with st.container(border=True):
-                st.markdown("#### Recommended Improvements")
+            st.write("")
+            
+            st.subheader("💡 Pedagogical AI Recommendations")
+            with st.chat_message("ai"):
+                st.write("Based on my analysis of the student metrics and educational best practices, here are my suggestions to improve this question:")
                 st.write(report['Recommended Improvements'])
                 
-            with st.container(border=True):
-                st.markdown("#### Pedagogical References")
-                st.write(report['Pedagogical References'])
+            st.write("")
+            
+            with st.expander("📚 View Retrieved Pedagogical References (RAG)"):
+                st.caption(report['Pedagogical References'])
                 
+            st.divider()
             st.caption(report['Ethical/Educational Disclaimer'])
