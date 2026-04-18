@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 from logistic_regression_deployment import BloomModelDeployer
-from graph import agent_graph
+from agent.graph import agent_graph
 
 # Page configuration
 st.set_page_config(
@@ -36,7 +36,7 @@ with st.sidebar:
         st.error("⚠️ Models not loaded.")
         if st.button("Train Model Now"):
             with st.spinner("Training..."):
-                worker.train("final.csv")
+                worker.train("data/final.csv")
                 st.success("Training complete!")
                 st.rerun()
     else:
@@ -47,7 +47,7 @@ with st.sidebar:
     
     if st.button("Force Retrain Models"):
         with st.spinner("Training..."):
-            worker.train("final.csv")
+            worker.train("data/final.csv")
             st.success("Re-training successful!")
             st.rerun()
 

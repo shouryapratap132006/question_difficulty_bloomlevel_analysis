@@ -11,7 +11,7 @@ from langchain.text_splitter import MarkdownTextSplitter
 class PedagogyRAG:
     """RAG system for pedagogical best practices."""
     
-    def __init__(self, doc_path="pedagogy_guidelines.md"):
+    def __init__(self, doc_path="data/pedagogy_guidelines.md"):
         self.doc_path = doc_path
         self.embeddings = HuggingFaceEmbeddings(
             model_name="all-MiniLM-L6-v2", 

@@ -95,7 +95,7 @@ class BloomModelDeployer:
                 
         return data
 
-    def train(self, data_path="final.csv"):
+    def train(self, data_path="data/final.csv"):
         """
         The heavy lifter. It reads the CSV, prepares the features, trains two models,
         and saves everything so we can use it later without retraining.
@@ -231,6 +231,6 @@ if __name__ == "__main__":
     worker = BloomModelDeployer()
 
     if args.train:
-        worker.train("final.csv")
+        worker.train("data/final.csv")
     else:
         print("Run with --train to build your models, or use it as a library in your app!")

@@ -1,8 +1,8 @@
 import os
 from langchain_core.prompts import PromptTemplate
 from langchain_groq import ChatGroq
-from state import AgentState
-from rag import PedagogyRAG
+from agent.state import AgentState
+from agent.rag import PedagogyRAG
 
 # Initialize RAG singleton
 rag_system = PedagogyRAG()

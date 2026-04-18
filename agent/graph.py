@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, END
-from state import AgentState
-from nodes import analyzer_node, gap_detector_node, retriever_node, recommendation_node, report_builder_node
+from agent.state import AgentState
+from agent.nodes import analyzer_node, gap_detector_node, retriever_node, recommendation_node, report_builder_node
 
 def build_agent_graph():
     """Constructs and compiles the LangGraph agent workflow."""

@@ -71,7 +71,7 @@ The model uses a total of **12 features** (9 base features from the dataset + 3 
 
 ---
 
-## ⚙️ Project Workflow
+## ⚙️ Milestone 1: ML Predictive Modeling
 
 ### 1. Data Cleaning & Engineering
 - **NLP Processing**: Text is vectorized using `SentenceTransformer` ('all-MiniLM-L6-v2') to capture semantic intent.
@@ -89,7 +89,7 @@ The model uses a total of **12 features** (9 base features from the dataset + 3 
 
 ---
 
-## 📈 Results
+## 📈 Milestone 1: Results
 
 | Metric (Accuracy) | Bloom Level | Difficulty |
 |---|---|---|
@@ -101,17 +101,17 @@ The model uses a total of **12 features** (9 base features from the dataset + 3 
 
 ---
 
-## 🛠️ Tech Stack
-
 | Library | Purpose |
 |---|---|
 | **Python 3.9** | Programming language |
 | **Streamlit** | UI Framework & Dashboard |
-| **Sentence-Transformers** | NLP & Semantic Embeddings |
+| **Sentence-Transformers** | NLP & Semantic Embeddings for ML/RAG |
 | **scikit-learn** | ML Models, Preprocessing, and Metrics |
+| **LangGraph / LangChain** | Multi-Agent Orchestration & Core AI logic |
+| **FAISS** | In-Memory Vector Database |
+| **Groq (Llama 3.1)** | Free-tier, ultra-fast LLM API |
 | **Pandas / NumPy** | Data manipulation and Numerical logic |
 | **Docker** | Containerization |
-| **Hugging Face** | Deployment |
 
 ---
 
@@ -119,32 +119,48 @@ The model uses a total of **12 features** (9 base features from the dataset + 3 
 
 ```
 capstone_genai/
-├── models/                    # Saved .pkl joblib artifacts
-├── final.csv                  # Main dataset
-├── milestone1.ipynb           # Research and Development Notebook
-├── logistic_regression_deployment.py # Core ML class
-├── app.py                     # Beautified Streamlit Frontend (Tabs: ML & Agent)
-├── graph.py                   # LangGraph Agent logic
-├── nodes.py                   # LangGraph nodes
-├── rag.py                     # FAISS Vector Store logic
-├── state.py                   # Agent State definitions
-├── pedagogy_guidelines.md     # RAG document source
-├── requirements.txt           # Deployment dependencies
-└── README.md                  # Project documentation
+├── data/
+│   ├── final.csv                  # Main dataset
+│   └── pedagogy_guidelines.md     # RAG document source
+├── agent/                         # Multi-Agent LangGraph Logic
+│   ├── graph.py                   # Agent workflow compilation
+│   ├── nodes.py                   # Sub-agent logical nodes
+│   ├── rag.py                     # FAISS Vector Store logic
+│   └── state.py                   # Shared typed dictionary 
+├── notebooks/
+│   ├── milestone1.ipynb           # Model Research and Training
+│   ├── milestone2.ipynb           # Agentic Assistant Execution
+│   └── rag.ipynb                  # Vector Search Isolation Testing
+├── models/                        # Saved Joblib Pickles
+├── app.py                         # Beautiful Streamlit Dashboard
+├── logistic_regression_deployment.py # ML Deployment Module
+├── Dockerfile
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## 🤖 Agentic Workflow (Milestone 2 Architecture)
+## 🤖 Milestone 2: Agentic AI Assistant
 
-The second milestone includes an explicit **LangGraph** agent paired with **Retrieval-Augmented Generation (RAG)** to provide instructional recommendations.
+The second milestone extends the ML foundational model by introducing a multi-agent orchestrated workflow using **LangGraph** paired with **Retrieval-Augmented Generation (RAG)** to provide highly specific instructional recommendations.
 
-### Architecture Workflow
-1. **QuestionAnalyzer**: Evaluates the question's parameters and ML predictions.
-2. **GapDetector**: Calculates learning gaps based on success rates and completion time.
-3. **RAGRetriever**: Uses a local **FAISS** vector store embedded with `all-MiniLM-L6-v2` to retrieve appropriate pedagogical guidelines.
-4. **RecommendationGenerator**: Prompts the **Groq LLM** with the context and gaps to propose 3 actionable, structured redesign efforts.
-5. **ReportBuilder**: Standardizes the output into a final report visible on the Streamlit dashboard.
+### 1. Knowledge Base & Vector Store (RAG)
+- **Pedagogical Corpus**: We constructed `pedagogy_guidelines.md` consisting of structured Bloom's Taxonomy definitions, learning gap heuristics, and actionable question-refinement strategies.
+- **Embedding & Storage**: The corpus is split into chunks and embedded locally using the identical `sentence-transformers/all-MiniLM-L6-v2` model from Milestone 1 for maximum efficiency. It is stored in memory using a **FAISS** vector database for split-second contextual retrieval.
+
+### 2. Multi-Agent Workflow (LangGraph)
+The LLM inference is rigorously structured via an explicit **StateGraph** architecture:
+- **QuestionAnalyzer Node**: Evaluates the initial question's properties and imports the Logistic Regression model predictions.
+- **GapDetector Node**: Calculates learning gaps algorithmically based on success rates and completion time.
+- **RAGRetriever Node**: Executes a semantic similarity search against the FAISS vector store to retrieve appropriate pedagogical guidelines mapped to the detected gaps.
+- **RecommendationGenerator Node**: Constructs a structured prompt encompassing the stats, gaps, and RAG context, sending it to the **Groq LLM (Llama 3.1)** API to generate natural, actionable redesign efforts.
+- **ReportBuilder Node**: Formats all state artifacts into a unified dictionary for frictionless dashboard rendering.
+
+### 3. Integrated UI Dashboard
+- Transformed the legacy form into a unified, seamless interface leveraging native container components (`st.container`, `st.metric`).
+- ML classifications and Agentic Recommendations run chronologically on a single button press.
+- LLM feedback is formatted inside `st.chat_message` components for an intuitive "AI Co-pilot" collaborative experience.
 
 ---
 
